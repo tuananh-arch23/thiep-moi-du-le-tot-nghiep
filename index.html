@@ -342,7 +342,7 @@
             gap: 30px;
         }
 
-        /* Responsive cho thiết bị di động */
+        /* ================= CẤU HÌNH TỐI ƯU RIÊNG CHO ĐIỆN THOẠI (RESPONSIVE) ================= */
         @media (max-width: 768px) {
             .wrapper {
                 height: auto;
@@ -350,11 +350,15 @@
             }
 
             .card-container {
-                position: relative;
+                position: absolute; /* ĐÃ SỬA: Giữ absolute khi ẩn để không làm tụt phong thư xuống dưới đáy */
                 flex-direction: column;
                 height: auto;
                 width: 100%;
                 border-radius: 15px;
+            }
+
+            .card-container.show {
+                position: relative; /* ĐÃ SỬA: Chỉ chuyển sang relative khi mở ra để vuốt cuộn màn hình mượt mà */
             }
 
             .card-content {
@@ -408,15 +412,19 @@
 </head>
 <body>
 
+    <!-- THẺ NHẠC NỀN -->
     <audio id="bg-music" src="nhacnen.mp3" loop></audio>
 
     <div class="wrapper">
+        <!-- CẢNH 1: PHONG THƯ -->
         <div class="envelope-container" id="envelope">
-            <button class="btn-open" id="openBtn">CLICK TẠI ĐÂY</button>
+            <button class="btn-open" id="openBtn">MỞ TẠI ĐÂY</button>
         </div>
 
+        <!-- CẢNH 2: NỘI DUNG THIỆP MỜI -->
         <div class="card-container" id="card">
             
+            <!-- CANVAS PHÁO HOA TỰ ĐỘNG BẮN LIÊN TỤC -->
             <canvas id="fireworks-canvas"></canvas>
 
             <div class="corner-decor"></div>
@@ -444,12 +452,12 @@
 
                 <div class="card-right">
                     <p class="greeting">Thân mời</p>
-                    <h2 class="invitees">anh/chị/em/bạn bè<br>thân thương</h2>
-                    <p class="purpose">đến dự buổi lễ tốt nghiệp của <strong>Tuấn Anh</strong>.</p>
+                    <h2 class="invitees">Anh/chị/bạn bè<br>quý mến</h2>
+                    <p class="purpose">Đến dự buổi lễ tốt nghiệp của <strong>Tuấn Anh</strong>.</p>
                     
                     <div class="divider"></div>
 
-                    <div class="time-date">13.07.2026 | 09h30</div>
+                    <div class="time-date">13.07.2026 | 10h00</div>
 
                     <h3 class="location-name">Trường Đại học Nha Trang</h3>
                     <p class="location-address">02 Nguyễn Đình Chiểu, phường Bắc Nha Trang,<br>Khánh Hoà</p>
@@ -462,7 +470,7 @@
                     </a>
 
                     <div class="footer-info">
-                        <span>ZL: Tuấn Anh</span>
+                        <span>ZL: Nguyễn Tuấn Anh</span>
                         <span>SĐT: 0702340724</span>
                     </div>
                 </div>
@@ -470,6 +478,7 @@
         </div>
     </div>
 
+    <!-- CODE SCRIPT XỬ LÝ PHÁO HOA SIÊU TO & PHÁT NHẠC -->
     <script>
         const openBtn = document.getElementById('openBtn');
         const envelope = document.getElementById('envelope');
@@ -496,7 +505,6 @@
                 this.color = color;
                 const angle = Math.random() * Math.PI * 2;
                 
-                // Lực đẩy lớn giúp pháo hoa bung rộng hoành tráng
                 const speed = Math.random() * 8 + 3; 
                 this.vx = Math.cos(angle) * speed;
                 this.vy = Math.sin(angle) * speed;
@@ -505,10 +513,7 @@
                 this.friction = 0.965;
                 this.alpha = 1;
                 
-                // Thời gian lấp lánh lâu tàn hơn
                 this.decay = Math.random() * 0.012 + 0.008; 
-                
-                // Kích thước hạt pháo to rõ
                 this.size = Math.random() * 3.5 + 2.5; 
             }
 
@@ -528,7 +533,6 @@
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
                 
-                // Hiệu ứng phát sáng quầng Neon rực rỡ
                 ctx.shadowBlur = 18;
                 ctx.shadowColor = this.color;
                 
@@ -541,7 +545,6 @@
             const fireworkColors = ['#ffd700', '#ff007f', '#00d2ff', '#00ff87', '#a100ff', '#ff5e00', '#ffffff'];
             const chosenColor = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
             
-            // 100 tia lửa giúp chùm pháo hoa cực kỳ dày đặc
             const sparkCount = 100; 
             for (let i = 0; i < sparkCount; i++) {
                 particles.push(new FireworkSpark(x, y, chosenColor));
@@ -565,13 +568,11 @@
             let minX, maxX, minY, maxY;
 
             if (window.innerWidth <= 768) {
-                // Trên di động: Nổ ngẫu nhiên theo chiều đứng của thiệp
                 minX = 60;
                 maxX = canvas.width - 60;
                 minY = 60;
                 maxY = canvas.height - 120;
             } else {
-                // Trên máy tính: Tập trung bắn pháo to ở góc nền thông tin chữ bên phải
                 minX = canvas.width * 0.4;
                 maxX = canvas.width - 60;
                 minY = 60;
@@ -583,7 +584,6 @@
 
             createFireworkBurst(randomX, randomY);
 
-            // Bắn liên tục tự động sau mỗi 0.7s - 1.8s
             const nextFireTime = Math.random() * 1100 + 700;
             setTimeout(startContinuousFireworks, nextFireTime);
         }
@@ -600,8 +600,7 @@
                 startContinuousFireworks();
             }, 350);
 
-            // KÍCH HOẠT PHÁT NHẠC
-            bgMusic.play().catch(err => console.log("Trình duyệt yêu cầu thao tác người dùng để phát nhạc:", err));
+            bgMusic.play().catch(err => console.log("Yêu cầu tương tác phát nhạc:", err));
 
             renderLoop();
         });
